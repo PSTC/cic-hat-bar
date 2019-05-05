@@ -26,8 +26,8 @@ This project uses Stack; run `stack install` to install and `stack build` to bui
 ## References
 <span id="f1">[1]</span> [On type-based termination and dependent pattern matching in the calculus of inductive constructions](https://pastel.archives-ouvertes.fr/pastel-00622429) by Jorge Luis Sacchini.
 
-<span id="f2">[1]</span> [CIC^: Type-based termination of recursive definitions in the calculus of inductive constructions](https://link.springer.com/chapter/10.1007/11916277_18) by Gilles Barthe, Benjamin Grégoire, and Fernando Pastawski.
+<span id="f2">[2]</span> [CIC^: Type-based termination of recursive definitions in the calculus of inductive constructions](https://link.springer.com/chapter/10.1007/11916277_18) by Gilles Barthe, Benjamin Grégoire, and Fernando Pastawski.
 
-<span id="f3">[1]</span> [Calculus of Inductive Constructions](https://coq.inria.fr/distrib/current/refman/language/cic.html), from the Coq Reference Manual.
+<span id="f3">[3]</span> [Calculus of Inductive Constructions](https://coq.inria.fr/distrib/current/refman/language/cic.html), from the Coq Reference Manual.
 
-<span id="f4">[1]</span> [Practical inference for type-based termination in a polymorphic setting](https://link.springer.com/chapter/10.1007/11417170_7) by Gilles Barthe, Benjamin Grégoire, and Fernando Pastawski.
+<span id="f4">[4]</span> [Practical inference for type-based termination in a polymorphic setting](https://link.springer.com/chapter/10.1007/11417170_7) by Gilles Barthe, Benjamin Grégoire, and Fernando Pastawski.
