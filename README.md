@@ -6,20 +6,37 @@ The algorithm itself is based directly on the one specified in CIC^, which in tu
 
 This project uses Stack; run `stack install` to install and `stack build` to build an executable that doesn't do anything. Run `stack test` to print out some example inferences. The terms will print out as fancy Unicode characters; if you're on Windows, you'll need to run `chcp.com 65001` first (see [here](https://stackoverflow.com/q/25373116/9270195)).
 
+## Structure
+```
+src/
+    Grammar/
+        Terms.hs: AST for the terms of CIC^_
+        Stages.hs: All the different annotations a type could have
+        Contexts.hs: Local and global contexts for bindings and inductive definitions
+    Inference/
+        Infer.hs: The main inference algorithms `infer`, `check`, `recCheck`
+        Defs.hs: Definitions over inductive constructions
+        Auxil.hs: Auxiliary functions for the algorithms
+test/
+    Spec.hs: Tests
+app/
+    Main.hs: nothing
+```
+
 ## TODOs
 * Contexts:
-    - isValid: To check the validity of an inductive definition
-    - getFreeVariable: To produce a free variable given a context
+    - `isValid`: To check the validity of an inductive definition
+    - `getFreeVariable`: To produce a free variable given a context
 * Infer:
-    - infer: Inference for `Case` and `Fix` terms
-    - recCheck: To ensure soundness and completeness of stage constraints
+    - `infer`: Inference for `Case` and `Fix` terms
+    - `recCheck`: To ensure soundness and completeness of stage constraints
 * Defs:
-    - typePred: Returns the type of a `Case` expression
-    - typeBranch: Returns the type of a branch in a `Case` expression
+    - `typePred`: Returns the type of a `Case` expression
+    - `typeBranch`: Returns the type of a branch in a `Case` expression
 * Auxil:
-    - whnf: Computes the weak head normal form of an expression
-    - (⪯): Computes a stage constraint given a subtyping relation
-    - shift: Shifts up stage annotations of types in recursive positions
+    - `whnf`: Computes the weak head normal form of an expression
+    - `(⪯)`: Computes a stage constraint given a subtyping relation
+    - `shift`: Shifts up stage annotations of types in recursive positions
 * Spec:
     - Use Hspec!
 
