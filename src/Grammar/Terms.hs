@@ -2,9 +2,10 @@
 
 module Grammar.Terms
     ( Term(..)
-    , bind
+    , bind, bindAll
     , apply, unapply
-    , flatten
+    , flatten, unflatten
+    , dom
     ) where
 
 import Grammar.Stages
@@ -105,6 +106,11 @@ flatten (Prod x t b) =
     let (xts, body) = flatten b
     in  ((x, t) : xts, body)
 flatten b = ([], b)
+
+-- Turn ([(x1, t1), ...], body) into actual product (Prod x1 t1 (... (Prod xn tn body)))
+unflatten :: ([(String, Term a)], Term a) -> Term a
+unflatten ([], body) = body
+unflatten ((x, t) : xts, body) = Prod x t (unflatten (xts, body))
 
 -- Get the parameter names of a product
 dom :: Term a -> [String]
