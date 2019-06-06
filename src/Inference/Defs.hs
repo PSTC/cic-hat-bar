@@ -1,10 +1,8 @@
 module Inference.Defs
-    ( lengthOfIndParams
-    , lengthOfIndArgs
-    , lengthOfConstrParams
-    , lengthOfConstrArgs
-    , typeInd
-    , typeConstr
+    ( lengthOfIndParams, lengthOfIndArgs
+    , lengthOfConstrParams, lengthOfConstrArgs
+    , typeInd, typeConstr
+    , typePred, typeBranch
     ) where
 
 import Grammar.All
@@ -62,23 +60,35 @@ typeConstr c s d =
         setStage i s (Prod x t e) = Prod x t (setStage i s e)       -- inductive type never appears in t (CIC^_ Def. 2.10, bullet 3)
         setStage _ _ t = t                                          -- inductive type never appears elsewhere (CIC^_ Def. 2.10, bullet 1)
 
--- I /think/ this is the type of a case expression
--- applied to parameters ps but abstracted over the input inductive type's arguments
--- Since our case expressions contain its entire type, I think we just need to bind ps
--- then set the stage of the input inductive type to ŝ
+-- Given an inductive type name i, a stage s, a list of parameters ps,
+-- a variable name x, a sort w, and a global context d,
+-- construct a product with the arguments of i and x of type i with stage (succ s)
+-- and with w as the body in which x in used
+-- where the parameters of i are bound to ps
+-- i.e. ΠΔas. Πx: (I ŝ ps as). w
 typePred :: String -> Stage -> [Term Stage] -> String -> Term Stage -> IndTypes -> Term Stage
 typePred i s ps x w d =
     let I _ n sig _ = getInd i d
+        (xts, _) = flatten sig
         pdom = getIndParamDom i d
         as   = map Var $ getIndArgDom i d
-        (xts, _) = flatten sig
-        prod = unflatten (drop n xts, Prod x (Ind i (Succ s) ps as) w)
+        body = Prod x (Ind i (Succ s) ps as) w
+        prod = unflatten (drop n xts, body)
     in  bindAll prod $ zip pdom ps
 
--- I /think/ this is the type of a case branch
--- applied to parameters ps but abstracted over constructor arguments
--- Since our case branches are functions over parameters and arguments,
--- I think we just need to get the type of that function applied to ps
--- then set the stage of the inductive type to s
-typeBranch :: String -> Stage -> Term Stage -> [Term Stage] -> Term Stage
-typeBranch c s p ps = Set -- TODO
+-- Given a constructor name c, a stage s, a list of parameters ps,
+-- and a global context d,
+-- construct a product with the arguments of c
+-- and with p applied to the indices of the inductive type of c and applied to c as the body
+-- where the parameters of c are bound to ps
+-- i.e. ΠΔas. P is c
+typeBranch :: String -> Stage -> Term Stage -> [Term Stage] -> IndTypes -> Term Stage
+typeBranch c s p ps d =
+    let n = lengthOfConstrParams c d
+        sig = typeConstr c s d
+        (xts, Ind _ _ _ is) = flatten sig
+        pdom = getConstrParamDom c d
+        as   = map Var $ getConstrArgDom c d
+        body = apply p is [Constr c (map (fmap (const Bare)) ps) as]
+        prod = unflatten (drop n xts, body)
+    in  bindAll prod $ zip pdom ps

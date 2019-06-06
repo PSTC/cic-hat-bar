@@ -3,7 +3,7 @@ module Grammar.Contexts
     , IndTypes, Inductive(..)
     , getType
     , getInd, getIndFromConstr, getConstr, getConstrType
-    , getIndParamDom, getIndArgDom
+    , getIndParamDom, getIndArgDom, getConstrParamDom, getConstrArgDom
     , getFreeVariable
     ) where
 
@@ -126,6 +126,18 @@ getIndArgDom :: String -> IndTypes -> [String]
 getIndArgDom i d =
     let I _ n sig _ = getInd i d
     in  drop n $ dom sig
+
+-- Given a global context d and a constructor name c, get the parameter names (i.e. its domain)
+getConstrParamDom :: String -> IndTypes -> [String]
+getConstrParamDom c d =
+    let I _ n _ _ = getIndFromConstr c d
+    in  take n . dom $ getConstrType c d
+
+-- Given a global context d and a constructor name c, get the argument names (i.e. its domain)
+getConstrArgDom :: String -> IndTypes -> [String]
+getConstrArgDom c d =
+    let I _ n _ _ = getIndFromConstr c d
+    in  drop n . dom $ getConstrType c d
 
 -- Given a local context and a list of terms, get an arbitrary variable name that is free within the context
 -- TODO: This always returns "_"!!
