@@ -1,6 +1,6 @@
 # CIC^_
 
-A Haskell implementation of a sized type inference algorithm for CIC^_ [\[1\]](#f1), which is CIC^ [\[2\]](#f2) with simple types, which is CIC [\[3\]](#f3) with sized types, which is the dependent type theory for Coq. It isn't specified how CIC^_ should be pronounced (or written in ASCII), so I'm calling it CIC-hat-bar, because CIC-caret-underscore is far too long a name.
+A partial Haskell implementation of a sized type inference algorithm for CIC^_ [\[1\]](#f1), which is CIC^ [\[2\]](#f2) with simple types, which is CIC [\[3\]](#f3) with sized types, which is the dependent type theory for Coq. It isn't specified how CIC^_ should be pronounced (or written in ASCII), so I'm calling it CIC-hat-bar.
 
 The algorithm itself is based directly on the one specified in CIC^, which in turn references an algorithm in F^ [\[4\]](#f4). Changes will need to be made to the algorithm to restrict the language to simple types.
 
@@ -26,7 +26,7 @@ app/
 ## TODOs
 * Contexts:
     - `isValid`: To check the validity of an inductive definition
-    - `getFreeVariable`: To produce a free variable given a context
+    - `getFreeVariable`: To produce a free variable given a context and terms
 * Infer:
     - `infer`: Inference for `Case` and `Fix` terms
     - `recCheck`: To ensure soundness and completeness of stage constraints
