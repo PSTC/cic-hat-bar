@@ -25,10 +25,8 @@ lengthOfIndParams i d = params $ getInd i d
 lengthOfIndArgs :: String -> IndTypes -> Int
 lengthOfIndArgs i d =
     let I _ _ sig _ = getInd i d
-    in countProd sig 0 - lengthOfIndParams i d
-    where
-        countProd (Prod _ _ t)  n = countProd t (n + 1)
-        countProd _ n = n
+        (xts, _)    = flatten sig
+    in length xts - lengthOfIndParams i d
 
 lengthOfConstrParams :: String -> IndTypes -> Int
 lengthOfConstrParams c d = params $ getIndFromConstr c d
@@ -36,10 +34,8 @@ lengthOfConstrParams c d = params $ getIndFromConstr c d
 lengthOfConstrArgs :: String -> IndTypes -> Int
 lengthOfConstrArgs c d =
     let Beta _ t = getConstr c d
-    in  countProd t 0 - lengthOfConstrParams c d
-    where
-        countProd (Prod _ _ t)  n = countProd t (n + 1)
-        countProd (Ind _ _ _ _) n = n
+        (xts, _) = flatten t
+    in  length xts - lengthOfConstrParams c d
 
 -- The type of the inductive type i if it were treated like a function
 -- N.B. We use CIC^'s definition, which abstracts over parameters, and not CIC^_'s, which doesn't

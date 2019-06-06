@@ -4,10 +4,11 @@ module Grammar.Terms
     ( Term(..)
     , bind
     , apply, unapply
+    , flatten
     ) where
 
 import Grammar.Stages
-import Data.List (intercalate)
+import Data.List (intercalate, foldl')
 
 data Term a
     = Var String
@@ -76,11 +77,13 @@ bind t x e = bindStage t
             Case e' t' es  -> Case (bind' e') (bindBare t') (map bind' es)
             _              -> t
 
--- Turn (x ps as) into actual application (App (App x p1...) as...)
-apply :: Term Bare -> [Term Bare] -> [Term Bare] -> Term Bare
-apply x ps as = foldl (\abs p -> App abs p) x (ps ++ as)
+{- Transformations of terms -}
 
--- Turn application (App (App x p1...) as..) into (x ps as)
+-- Turn (x ps as) into actual application (App (App x p1...) as...)
+apply :: Term a -> [Term a] -> [Term a] -> Term a
+apply x ps as = foldl' (\abs p -> App abs p) x (ps ++ as)
+
+-- Turn application (App (App x p1...) as...) into (x ps as)
 -- n is the number of arguments and NOT the number of parameters
 unapply :: Term a -> Int -> (Term a, [Term a], [Term a])
 unapply (App abs p) 0 =
@@ -90,6 +93,13 @@ unapply (App abs a) n =
     let (x, ps, as) = unapply abs (n - 1)
     in  (x, ps, as ++ [a])
 unapply x 0 = (x, [], [])
+
+-- Turm product (Prod x1 t1 (... (Prod xn tn body))) into flat list ([(x1, t1), ...], body)
+flatten :: Term a -> ([(String, Term a)], Term a)
+flatten (Prod x t b) =
+    let (xts, body) = flatten b
+    in  ((x, t) : xts, body)
+flatten b = ([], b)
 
 {-
 -- like a map, except f g h can decide what to do on select constructors
