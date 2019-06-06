@@ -31,11 +31,10 @@ app/
     - `infer`: Inference for `Case` and `Fix` terms
     - `recCheck`: To ensure soundness and completeness of stage constraints
 * Defs:
-    - `typePred`: Returns the type of a `Case` expression
     - `typeBranch`: Returns the type of a branch in a `Case` expression
 * Auxil:
     - `whnf`: Computes the weak head normal form of an expression
-    - `(⪯)`: Computes a stage constraint given a subtyping relation
+    - `(⪯)`: Computes stage constraints given a subtyping relation
     - `shift`: Shifts up stage annotations of types in recursive positions
 * Spec:
     - Use Hspec!

@@ -127,7 +127,7 @@ getIndArgDom i d =
     let I _ n sig _ = getInd i d
     in  drop n $ dom sig
 
--- Given a local context, get an arbitrary variable name that is free within the context
+-- Given a local context and a list of terms, get an arbitrary variable name that is free within the context
 -- TODO: This always returns "_"!!
-getFreeVariable :: Context -> String
-getFreeVariable _ = "_"
+getFreeVariable :: Context -> [Term a] -> String
+getFreeVariable _ _ = "_"

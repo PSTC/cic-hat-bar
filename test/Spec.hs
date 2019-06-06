@@ -31,6 +31,7 @@ trueTypeBare = Ind "True"  Bare [] []
 natType      = Ind "Nat"   Infty [] []
 natTypeBare  = Ind "Nat"   Bare [] []
 listType a   = Ind "List"  Infty [Var a] []
+finType k    = Ind "Fin"   Infty []      [k]
 vecType a n  = Ind "Vec"   Infty [Var a] [n]
 
 zero   = Constr "O" [] []
@@ -53,7 +54,12 @@ indTypes = [
         [ Beta "Nil"  (Prod "A" Set (listType "A"))
         , Beta "Cons" (Prod "A" Set (Prod "a" (Var "A") (Prod "l" (listType "A") (listType "A"))))
         ],
-    -- List[1]: Set -> Nat -> Set := {VNil: (A: Set) -> (n: Nat) -> Vec A n, VCons (A: Set) -> (n: Nat) -> A -> Vec A n -> Vec A (S n)}
+    -- Fin[0]: Nat -> Set := {FZ: (k: Nat) -> Fin (S k), FS: (k: Nat) -> Fin k -> Fin (S k)}
+    I "Fin" 0 (Prod "k" natType Set)
+        [ Beta "FZ" (Prod "k" natType (finType (succ (Var "k"))))
+        , Beta "FS" (Prod "k" natType (Prod "f" (finType (Var "k")) (finType (succ (Var "k")))))
+        ],
+    -- Vec[1]: Set -> Nat -> Set := {VNil: (A: Set) -> (n: Nat) -> Vec A n, VCons (A: Set) -> (n: Nat) -> A -> Vec A n -> Vec A (S n)}
     I "Vec" 0 (Prod "A" Set (Prod "n" natType Set))
         [ Beta "VNil"  (Prod "A" Set (vecType "A" zero))
         , Beta "VCons" (Prod "A" Set (Prod "n" natType (Prod "a" (Var "A") (Prod "v" (vecType "A" (Var "n")) (vecType "A" (succ (Var "n")))))))

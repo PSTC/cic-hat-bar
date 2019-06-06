@@ -2,6 +2,7 @@
 
 module Grammar.Terms
     ( Term(..)
+    , isSort
     , bind, bindAll
     , apply, unapply
     , flatten, unflatten
@@ -38,6 +39,12 @@ instance Show a => Show (Term a) where
         Constr c ps as  -> unwords . filter (not . null) $ [c, unwords (map show ps), unwords (map show as)]
         Case e t es     -> "(case " ++ show e ++ " of " ++ intercalate " | " (map show es) ++ ": " ++ show t ++ ")"
         Fix n x t e     -> "(fix_" ++ show n ++ " " ++ show x ++ ": " ++ show t ++ " = " ++ show e ++ ")"
+
+isSort :: Term a -> Bool
+isSort Prop     = True
+isSort Set      = True
+isSort (Type _) = True
+isSort _        = False
 
 -- Perform beta-/zeta-reduction by binding t{x/e}
 bind :: Term Stage -> String -> Term Stage -> Term Stage

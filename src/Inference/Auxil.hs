@@ -27,6 +27,13 @@ rules _         Set     = Set
 rules (Type i) (Type j) = Type (max i j)
 rules _        (Type j) = Type j
 
+-- Elim specifies the allowed sorts we can produce in a case match
+-- i.e. [I: A | I -> B], where I is the type of the case input,
+-- A is the sort of I, and B is the sort of the output of the match
+-- This is specified by Prod, Set&Type, Prop, and Prop-extended in the Manual
+elim :: Term Stage -> Term Stage -> Bool
+elim _ _ = True
+
 -- whnf "computes the weak head normal form of an expression" [CIC^]
 -- which performs reductions from the outside in
 -- until it reaches an unapplied abstraction/product or a constructor

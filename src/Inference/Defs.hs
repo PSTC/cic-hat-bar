@@ -66,13 +66,13 @@ typeConstr c s d =
 -- applied to parameters ps but abstracted over the input inductive type's arguments
 -- Since our case expressions contain its entire type, I think we just need to bind ps
 -- then set the stage of the input inductive type to ŝ
-typePred :: String -> Stage -> [Term Stage] -> Term Stage -> IndTypes -> Term Stage
-typePred i s ps w d =
+typePred :: String -> Stage -> [Term Stage] -> String -> Term Stage -> IndTypes -> Term Stage
+typePred i s ps x w d =
     let I _ n sig _ = getInd i d
         pdom = getIndParamDom i d
         as   = map Var $ getIndArgDom i d
         (xts, _) = flatten sig
-        prod = unflatten (drop n xts, Prod "x" (Ind i (Succ s) ps as) w)    -- TODO: What do we put in place of "x"?
+        prod = unflatten (drop n xts, Prod x (Ind i (Succ s) ps as) w)
     in  bindAll prod $ zip pdom ps
 
 -- I /think/ this is the type of a case branch
