@@ -2,7 +2,7 @@ module Grammar.Contexts
     ( Context, Declaration(..)
     , IndTypes, Inductive(..)
     , getType
-    , getInd, getIndFromConstr, getConstr
+    , getInd, getIndFromConstr, getConstr, getConstrType
     , getFreeVariable
     ) where
 
@@ -107,6 +107,12 @@ getConstr c d =
     where
         isConstr c (Beta c' _) = c == c'
         isConstr _ _ = False
+
+-- Given a global context d and a constructor name c, get the type of the corresponding constructor
+getConstrType :: String -> IndTypes -> Term Stage
+getConstrType c d =
+    let Beta _ t = getConstr c d
+    in  t
 
 -- Given a local context, get an arbitrary variable name that is free within the context
 -- TODO: This always returns "_"!!

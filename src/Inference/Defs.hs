@@ -51,7 +51,7 @@ typeInd i d = let I _ _ sig _ = getInd i d in sig
 typeConstr :: String -> Stage -> IndTypes -> Term Stage
 typeConstr c s d =
     let i = name $ getIndFromConstr c d
-        Beta _ t = getConstr c d
+        t = getConstrType c d
     in  traverseType i s t
     where
         traverseType :: String -> Stage -> Term Stage -> Term Stage -- constructor type must be of the form Πx1: T1. ... Πxk: Tk. I^s ps as (CIC^_ Def. 2.11)
