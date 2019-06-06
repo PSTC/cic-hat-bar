@@ -27,9 +27,9 @@ main = mapM_ print
 
 falseType    = Ind "False" Infty [] []
 trueType     = Ind "True"  Infty [] []
-trueTypeBare = Ind "True"  Bare [] []
+trueTypeBare = Ind "True"  Bare  [] []
 natType      = Ind "Nat"   Infty [] []
-natTypeBare  = Ind "Nat"   Bare [] []
+natTypeBare  = Ind "Nat"   Bare  [] []
 listType a   = Ind "List"  Infty [Var a] []
 finType k    = Ind "Fin"   Infty []      [k]
 vecType a n  = Ind "Vec"   Infty [Var a] [n]

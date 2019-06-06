@@ -2,7 +2,8 @@ module Grammar.Contexts
     ( Context, Declaration(..)
     , IndTypes, Inductive(..)
     , getType
-    , getInd, getIndFromConstr, getConstr, getConstrType
+    , getInd, getIndFromConstr, getIndSort
+    , getConstr, getConstrType, getConstrNames
     , getIndParamDom, getIndArgDom, getConstrParamDom, getConstrArgDom
     , getFreeVariable
     ) where
@@ -100,6 +101,10 @@ getIndFromConstr c = fromJust . find (isIndConstr c)
         isConstr c (Beta c' _) = c == c'
         isConstr _ _ = False
 
+-- Given a global context d and an inductive type name i, get the sort of the fully-applied inductive type
+getIndSort :: String -> IndTypes -> Term Stage
+getIndSort i = snd . flatten . signature . getInd i
+
 -- Given a global context d and a constructor name c, get the corresponding constructor declaration
 getConstr :: String -> IndTypes -> Declaration
 getConstr c d =
@@ -114,6 +119,12 @@ getConstrType :: String -> IndTypes -> Term Stage
 getConstrType c d =
     let Beta _ t = getConstr c d
     in  t
+
+-- Given a global context d and an inductive type name i, get the names of the constructors of i
+getConstrNames :: String -> IndTypes -> [String]
+getConstrNames i d =
+    let I _ _ _ cs = getInd i d
+    in  map (\(Beta c _) -> c) cs
 
 -- Given a global context d and an inductive type name i, get the parameter names (i.e. its domain)
 getIndParamDom :: String -> IndTypes -> [String]

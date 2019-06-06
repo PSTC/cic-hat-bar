@@ -1,5 +1,6 @@
 module Inference.Auxil
     ( rules
+    , elim
     , whnf
     , (⪯)
     ) where

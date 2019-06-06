@@ -7,6 +7,7 @@ module Inference.Infer
 import Grammar.All
 import Inference.Auxil
 import Inference.Defs
+import Data.List (foldl')
 import Control.Exception (assert)
 
 {- Inference algorithm 
@@ -62,6 +63,29 @@ infer v d g (Constr x params args) =
         (vc, c, e, t) = infer (incStageVars v) d (Beta fv tc : g) (apply (Var fv) params args)
         (_, _, argsSized) = unapply e (length args)
     in  (vc, c, Constr x params argsSized, t)
+infer v d g (Case ecBare pBare esBare) =
+    let s  = nextStage vc
+        (vc, cc, ec, tc) = infer v d g ecBare
+        Ind i r params args = whnf tc
+        a1 = assert (lengthOfIndParams i d == length params)
+        (vp, cp,  p, tp) = infer (incStageVars vc) d g pBare
+        Prod xn tn tpn = prodBody (lengthOfIndArgs i d) tp
+        w' = whnf tpn
+        a2 = assert (elim (getIndSort i d) w') Nothing
+        c0 = Constraint r (Succ s) : tp ⪯ typePred i s params xn w' d
+        (v, c, es) = foldl' (checkBranch s p params) (vp, c0, []) (zip (getConstrNames i d) esBare)
+    in  (v, c ++ cp ++ cc, Case ec pBare es, apply p args [ec])
+    where
+        prodBody :: Int -> Term Stage -> Term Stage
+        prodBody 0 t = whnf t
+        prodBody n t =
+            let Prod xi ti tpi = whnf t
+            in  prodBody (n - 1) tpi
+        checkBranch :: Stage -> Term Stage -> [Term Stage] -> (StageVars, Constraints, [Term Stage])
+                    -> (String, Term Bare) -> (StageVars, Constraints, [Term Stage])
+        checkBranch s p params (v, c, es) (constr, eBare) =
+            let (vi, ci, e) = check v d g eBare (typeBranch constr s p params d)
+            in  (vi, ci ++ c, es ++ [e])
 infer v _ _ _ = (v, [], Type 1, Type 2)
 
 -- (α, V*, V≠, C') -> C
