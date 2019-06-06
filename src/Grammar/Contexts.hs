@@ -114,6 +114,18 @@ getConstrType c d =
     let Beta _ t = getConstr c d
     in  t
 
+-- Given a global context d and an inductive type name i, get the parameter names (i.e. its domain)
+getIndParamDom :: String -> IndTypes -> [String]
+getIndParamDom i d =
+    let Ind _ n sig _ = getInd i d
+    in  take n $ dom sig
+
+-- Given a global context d and an inductive type name i, get the argument names (i.e. its domain)
+getIndArgDom :: String -> IndTypes -> [String]
+getIndArgDom i d =
+    let Ind _ n sig _ = getInd i d
+    in  drop n $ dom sig
+
 -- Given a local context, get an arbitrary variable name that is free within the context
 -- TODO: This always returns "_"!!
 getFreeVariable :: Context -> String

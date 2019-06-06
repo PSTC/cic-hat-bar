@@ -60,7 +60,7 @@ infer v d g (Constr x params args) =
         (vc, c, e, t) = infer (incStageVars v) d (Beta fv tc : g) (apply (Var fv) params args)
         (_, _, argsSized) = unapply e (length args)
     in  (vc, c, Constr x params argsSized, t)
-infer v _ _ _ = (v, [], Set, Set)
+infer v _ _ _ = (v, [], Type 1, Type 2)
 
 -- (α, V*, V≠, C') -> C
 recCheck :: Stage -> StageVars -> StageVars -> Constraints -> Constraints

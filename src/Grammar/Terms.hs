@@ -77,6 +77,11 @@ bind t x e = bindStage t
             Case e' t' es  -> Case (bind' e') (bindBare t') (map bind' es)
             _              -> t
 
+-- Given a term t and a list of variables and values, bind all in list in t in given order
+bindAll :: Term Stage -> [(String, Term Stage)] -> Term Stage
+bindAll t [] = t
+bindAll t ((x, e) : xes) = bindAll (bind t x e) xes
+
 {- Transformations of terms -}
 
 -- Turn (x ps as) into actual application (App (App x p1...) as...)
@@ -94,12 +99,18 @@ unapply (App abs a) n =
     in  (x, ps, as ++ [a])
 unapply x 0 = (x, [], [])
 
--- Turm product (Prod x1 t1 (... (Prod xn tn body))) into flat list ([(x1, t1), ...], body)
+-- Turn product (Prod x1 t1 (... (Prod xn tn body))) into flat list ([(x1, t1), ...], body)
 flatten :: Term a -> ([(String, Term a)], Term a)
 flatten (Prod x t b) =
     let (xts, body) = flatten b
     in  ((x, t) : xts, body)
 flatten b = ([], b)
+
+-- Get the parameter names of a product
+dom :: Term a -> [String]
+dom prod =
+    let (xts, _) = flatten prod
+    in  fst . unzip $ xts
 
 {-
 -- like a map, except f g h can decide what to do on select constructors
