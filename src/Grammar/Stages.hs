@@ -27,6 +27,7 @@ instance Show Stage where
 
 
 -- For keeping track of used stage variables
+-- This could use a State monad
 type StageVars = (IntSet, Int)
 
 initStageVars :: StageVars
