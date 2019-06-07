@@ -4,7 +4,7 @@ A partial Haskell implementation of a sized type inference algorithm for CIC^_ [
 
 The algorithm itself is based directly on the one specified in CIC^, which in turn references an algorithm in F^ [\[4\]](#f4). Changes will need to be made to the algorithm to restrict the language to simple types.
 
-This project uses Stack; run `stack install` to install and `stack build` to build an executable that doesn't do anything. Run `stack test` to print out some example inferences. The terms will print out as fancy Unicode characters; if you're on Windows, you'll need to run `chcp.com 65001` first (see [here](https://stackoverflow.com/q/25373116/9270195)).
+This project uses Stack; run `stack install` to install and `stack build` to build an executable that doesn't do anything. Run `stack test` to run some tests (incomplete); use `mainOld` in `Spec.hs` to print out some example inferences. The terms will print out as fancy Unicode characters; if you're on Windows, you'll need to run `chcp.com 65001` first (see [here](https://stackoverflow.com/q/25373116/9270195)).
 
 ## File structure
 ```
