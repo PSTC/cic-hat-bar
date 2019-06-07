@@ -22,8 +22,7 @@ lengthOfIndParams i d = params $ getInd i d
 
 lengthOfIndArgs :: String -> IndTypes -> Int
 lengthOfIndArgs i d =
-    let I _ _ sig _ = getInd i d
-        (xts, _)    = flatten sig
+    let (xts, _)    = flatten $ typeInd i d
     in length xts - lengthOfIndParams i d
 
 lengthOfConstrParams :: String -> IndTypes -> Int
@@ -38,7 +37,7 @@ lengthOfConstrArgs c d =
 -- The type of the inductive type i if it were treated like a function
 -- N.B. We use CIC^'s definition, which abstracts over parameters, and not CIC^_'s, which doesn't
 typeInd :: String -> IndTypes -> Term Stage
-typeInd i d = let I _ _ sig _ = getInd i d in sig
+typeInd i d = sig $ getInd i d
 
 -- In the type T of the constructor C of inductive type I,
 -- replace the stage of the arity of T with ŝ, and

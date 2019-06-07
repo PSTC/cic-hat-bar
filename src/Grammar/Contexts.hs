@@ -27,17 +27,17 @@ data Inductive = I {
         -- The name I of the inductive type being defined
         -- N.B. Only one type is defined at a time, as opposed to the Manual,
         --      which defines mutually inductive types together
-        name        :: String,
+        name    :: String,
         -- The number of polymorphic parameters
-        params      :: Int,
+        params  :: Int,
         -- The type signature of I if we consider it as a function
         -- N.B. The signature is an abstraction on both the parameters and the arguments of I
-        signature   :: Term Stage,
+        sig     :: Term Stage,
         -- The type signatures of the names and constructors C of I
         -- These will ALWAYS be Betas (it doesn't make sense for them to be Zetas!)
         -- N.B. The signatures are abstractions on both the parameters and the arguments of C
         --      This is NOT the same as defined in the Manual, which excludes the parameters
-        constrs     :: Context
+        constrs :: Context
     }   -- Ind[n](I: T[a] := Γ)
 
 
@@ -103,7 +103,7 @@ getIndFromConstr c = fromJust . find (isIndConstr c)
 
 -- Given a global context d and an inductive type name i, get the sort of the fully-applied inductive type
 getIndSort :: String -> IndTypes -> Term Stage
-getIndSort i = snd . flatten . signature . getInd i
+getIndSort i = snd . flatten . sig . getInd i
 
 -- Given a global context d and a constructor name c, get the corresponding constructor declaration
 getConstr :: String -> IndTypes -> Declaration
