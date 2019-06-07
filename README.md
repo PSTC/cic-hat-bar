@@ -21,7 +21,6 @@ src/
 test/
     Common.hs: Terms and contexts used throughout tests
     Spec.hs: Entry point for running tests
-    Grammar/: Contains tests for modules in Grammar
     Inference/: Contains tests for modules in Inference
 app/
     Main.hs: nothing
@@ -38,9 +37,8 @@ Inference.Auxil     -> Grammar.All
 Inference.Infer     -> Grammar.All, Inference.{Defs, Auxil}
 
 Common              -> Grammar.All
-Grammar.<Mod>Test   -> Common, Grammar.<Mod>,   same dependencies as Grammar.<Mod>
 Inference.<Mod>Test -> Common, Inference.<Mod>, same dependencies as Inference.<Mod>
-Spec.hs             -> Grammar.All, *.*Test, and Common, Inference.Infer (for now)
+Spec.hs             -> Grammar.All, Inference.*Test, and Common, Inference.Infer (for now)
 ```
 
 ## TODOs
@@ -55,7 +53,7 @@ Spec.hs             -> Grammar.All, *.*Test, and Common, Inference.Infer (for no
     - `(⪯)`: Computes stage constraints given a subtyping relation
     - `shift`: Shifts up stage annotations of types in recursive positions
 * Spec:
-    - Write tests for everything
+    - Write tests inference functions and helpers
 
 ## References
 <span id="f1">[1]</span> [On type-based termination and dependent pattern matching in the calculus of inductive constructions](https://pastel.archives-ouvertes.fr/pastel-00622429) by Jorge Luis Sacchini. Referred to as CIC^_.

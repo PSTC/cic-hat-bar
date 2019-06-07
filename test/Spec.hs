@@ -2,9 +2,6 @@ import Grammar.All
 import Inference.Infer
 
 import Common
-import Grammar.ContextsTest as Contexts
-import Grammar.StagesTest   as Stages
-import Grammar.TermsTest    as Terms
 import Inference.AuxilTest  as Auxil
 import Inference.DefsTest   as Defs
 import Inference.InferTest  as Infer
@@ -14,9 +11,6 @@ import Test.Hspec
 
 main :: IO ()
 main = hspec $ do
-    Stages.test
-    Terms.test
-    Contexts.test
     Defs.test
     Auxil.test
     Infer.test
