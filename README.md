@@ -6,21 +6,41 @@ The algorithm itself is based directly on the one specified in CIC^, which in tu
 
 This project uses Stack; run `stack install` to install and `stack build` to build an executable that doesn't do anything. Run `stack test` to print out some example inferences. The terms will print out as fancy Unicode characters; if you're on Windows, you'll need to run `chcp.com 65001` first (see [here](https://stackoverflow.com/q/25373116/9270195)).
 
-## Structure
+## File structure
 ```
 src/
     Grammar/
+        All.hs: Convenience module for importing/exporting all Grammar modules
         Terms.hs: AST for the terms of CIC^_
         Stages.hs: All the different annotations a type could have
         Contexts.hs: Local and global contexts for bindings and inductive definitions
     Inference/
-        Infer.hs: The main inference algorithms `infer`, `check`, `recCheck`
-        Defs.hs: Definitions over inductive constructions
-        Auxil.hs: Auxiliary functions for the algorithms
+        Infer.hs: The main inference algorithms `infer`, `check`, `recCheck` (see CIC^, Fig. 3 and F^, Sec. 3.4)
+        Defs.hs: Definitions over inductive constructions (see CIC^, Fig. 2)
+        Auxil.hs: Auxiliary functions for the algorithms (see CIC^, Sec. 4 Specifications and Def. 12)
 test/
-    Spec.hs: Tests
+    Common.hs: Terms and contexts used throughout tests
+    Spec.hs: Entry point for running tests
+    Grammar/: Contains tests for modules in Grammar
+    Inference/: Contains tests for modules in Inference
 app/
     Main.hs: nothing
+```
+
+## Module dependency structure
+```
+Grammar.Terms       -> Grammar.Stages
+Grammar.Contexts    -> Grammar.{Terms, Stages}
+Grammar.All         -> Grammar.*
+
+Inference.Defs      -> Grammar.All
+Inference.Auxil     -> Grammar.All
+Inference.Infer     -> Grammar.All, Inference.{Defs, Auxil}
+
+Common              -> Grammar.All
+Grammar.<Mod>Test   -> Common, Grammar.<Mod>,   same dependencies as Grammar.<Mod>
+Inference.<Mod>Test -> Common, Inference.<Mod>, same dependencies as Inference.<Mod>
+Spec.hs             -> Grammar.All, *.*Test, and Common, Inference.Infer (for now)
 ```
 
 ## TODOs
@@ -28,14 +48,14 @@ app/
     - `isValid`: To check the validity of an inductive definition
     - `getFreeVariable`: To produce a free variable given a context and terms
 * Infer:
-    - `infer`: Inference for `Case` and `Fix` terms
+    - `infer`: Inference for `Fix` terms
     - `recCheck`: To ensure soundness and completeness of stage constraints
 * Auxil:
     - `whnf`: Computes the weak head normal form of an expression
     - `(⪯)`: Computes stage constraints given a subtyping relation
     - `shift`: Shifts up stage annotations of types in recursive positions
 * Spec:
-    - Use Hspec!
+    - Write tests for everything
 
 ## References
 <span id="f1">[1]</span> [On type-based termination and dependent pattern matching in the calculus of inductive constructions](https://pastel.archives-ouvertes.fr/pastel-00622429) by Jorge Luis Sacchini. Referred to as CIC^_.
